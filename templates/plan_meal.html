@@ -1,0 +1,37 @@
+<!-- plan_meal.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Plan Meal</title>
+    </head>
+    <body>
+        <h1>Plan a Meal</h1>
+        <form method="post">
+            <label for="date">Date:</label><br>
+            <input type="date" id="date" name="date" required><br>
+
+            <label for="meal_type">Meal Type:</label><br>
+            <select id="meal_type" name="meal_type" required>
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+            </select><br>
+
+            <label for="recipe_id">Recipe:</label><br>
+            <select id="recipe_id" name="recipe_id" required>
+                <!-- Options should be populated dynamically based on available recipes -->
+                {% for recipe in recipes %}
+                    <option value="{{ recipe.id }}">{{ recipe.name }}</option>
+                {% endfor %}
+            </select><br>
+
+            <input type="submit" value="Plan Meal">
+        </form>
+    </body>
+    </html>
+{% endblock %}
+

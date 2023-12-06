@@ -1,0 +1,31 @@
+<!-- view_recipes.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>View Recipes</title>
+    </head>
+    <body>
+        <h1>Recipes</h1>
+        <ul>
+            {% for recipe in recipes %}
+                <li>
+                    <strong>{{ recipe.name }}</strong><br>
+                    Ingredients: {{ recipe.ingredients }}<br>
+                    Instructions: {{ recipe.instructions }}<br>
+                </li>
+            {% else %}
+                <li>No recipes found.</li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('add_recipe') }}">Add a New Recipe</a><br>
+        <a href="{{ url_for('home') }}">Back to Home</a>
+    </body>
+    </html>
+{% endblock %}
+
+
+
