@@ -3,35 +3,80 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Plan Meal</title>
-    </head>
-    <body>
-        <h1>Plan a Meal</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Plan Meal</title>
+    <style>
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .plan_meal_container form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 20px auto;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #666;
+        }
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .plan_meal_container input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .plan_meal_container input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Plan a Meal</h1>
+    <div class="plan_meal_container">
         <form method="post">
-            <label for="date">Date:</label><br>
-            <input type="date" id="date" name="date" required><br>
-
-            <label for="meal_type">Meal Type:</label><br>
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+    
+            <label for="meal_type">Meal Type:</label>
             <select id="meal_type" name="meal_type" required>
-                <option value="breakfast">Breakfast</option>
-                <option value="lunch">Lunch</option>
-                <option value="dinner">Dinner</option>
-            </select><br>
-
-            <label for="recipe_id">Recipe:</label><br>
+                <option value="" disabled selected>Meal Type</option>
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner">Dinner</option>
+            </select>
+    
+            <label for="recipe_id">Recipe:</label>
             <select id="recipe_id" name="recipe_id" required>
-                <!-- Options should be populated dynamically based on available recipes -->
+                <option value="" disabled selected>Recipe</option>
                 {% for recipe in recipes %}
                     <option value="{{ recipe.id }}">{{ recipe.name }}</option>
                 {% endfor %}
-            </select><br>
-
+            </select>
+    
             <input type="submit" value="Plan Meal">
         </form>
-    </body>
-    </html>
+    </div>
+</body>
+</html>
 {% endblock %}
+
 

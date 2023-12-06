@@ -1,24 +1,62 @@
-<!-- view_recipe.html -->
-
 {% extends 'base.html' %}
 
 {% block content %}
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Recipe Details</title>
-        <!-- Add any required CSS or JS here -->
-    </head>
-    <body>
-        <div class="recipe-container">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipe Details</title>
+    <style>
+        .recipe-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .recipe-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            max-width: 400px; /* Adjust width as needed */
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .recipe-card h2, h3 {
+            color: #333;
+            text-align: center;
+        }
+        .recipe-actions {
+            display: flex;
+            bottom: 10px;
+            right: 10px;
+        }
+        .recipe-actions a {
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+        .recipe-actions a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="recipe-container">
+        <div class="recipe-card">
             <h2>{{ recipe.name }}</h2>
             <h3>Ingredients:</h3>
             <p>{{ recipe.ingredients }}</p>
             <h3>Instructions:</h3>
             <p>{{ recipe.instructions }}</p>
+            <div class="recipe-actions">
+                <a href="{{ url_for('add_recipe', id=recipe.id) }}">Edit</a> <!-- change to edit recipe -->
+                <a href="{{ url_for('view_recipe', id=recipe.id) }}">Delete</a> <!-- change to delete recipe -->
+            </div>
         </div>
-    </body>
-    </html>
+    </div>
+</body>
+</html>
 {% endblock %}
-
-

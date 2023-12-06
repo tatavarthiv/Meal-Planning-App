@@ -1,31 +1,72 @@
-<!-- view_recipes.html -->
-
 {% extends 'base.html' %}
 
 {% block content %}
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>View Recipes</title>
-    </head>
-    <body>
-        <h1>Recipes</h1>
-        <ul>
-            {% for recipe in recipes %}
-                <li>
-                    <strong>{{ recipe.name }}</strong><br>
-                    Ingredients: {{ recipe.ingredients }}<br>
-                    Instructions: {{ recipe.instructions }}<br>
-                </li>
-            {% else %}
-                <li>No recipes found.</li>
-            {% endfor %}
-        </ul>
-        <a href="{{ url_for('add_recipe') }}">Add a New Recipe</a><br>
-        <a href="{{ url_for('home') }}">Back to Home</a>
-    </body>
-    </html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Recipes</title>
+    <style>
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .recipe-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .recipe-card {
+            flex: 0 0 30%;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            max-height: 250px;
+            overflow: hidden;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .recipe-card h3 {
+            color: #333;
+            margin-top: 0;
+        }
+        .recipe-actions {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+        .recipe-actions a {
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+        .recipe-actions a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Recipes</h1>
+    <div class="recipe-container">
+        {% for recipe in recipes %}
+            <div class="recipe-card">
+                <h3>{{ recipe.name }}</h3>
+                <p>Ingredients: {{ recipe.ingredients }}</p>
+                <p>Instructions: {{ recipe.instructions }}</p>
+                <div class="recipe-actions">
+                    <a href="{{ url_for('view_recipe', id=recipe.id) }}">Show</a>
+                </div>
+            </div>
+        {% else %}
+            <p>No recipes found.</p>
+        {% endfor %}
+    </div>
+    <a href="{{ url_for('add_recipe') }}">Add a New Recipe</a><br>
+</body>
+</html>
 {% endblock %}
-
-
-
