@@ -9,7 +9,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 
 #other imports
 import os
-from datetime import datetime
+from datetime import datetime, time
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///yourdatabase.db'
@@ -75,19 +75,17 @@ def view_recipes():
 def get_meals():
     meals = Meal.query.filter_by(user_id=current_user.id).all()
 
-    # # Define custom sort order for meal types
-    # meal_order = {'breakfast': 1, 'lunch': 2, 'dinner': 3}
-
-    # # Sort meals first by date, then by meal type
-    # sorted_meals = sorted(meals, key=lambda meal: (meal.date, meal_order.get(meal.meal_type.lower(), 0)))
-
     meal_data = []
     colors = {'breakfast': 'yellow', 'lunch': 'lightgreen', 'dinner': 'lightblue'}
+    times = {'breakfast': time(7, 0), 'lunch': time(12, 0), 'dinner': time(18, 0)}
 
     for meal in meals:
+        meal_time = times.get(meal.meal_type.lower(), time(0, 0))  # Default to midnight if not matched
+        meal_datetime = datetime.combine(meal.date, meal_time)
+
         meal_data.append({
             'title': meal.meal_type,
-            'start': meal.date.isoformat(),
+            'start': meal_datetime.isoformat(),
             'color': colors.get(meal.meal_type.lower(), 'gray'),  # Default color if not matched
             'url': url_for('view_recipe', id=meal.recipe_id)
         })
