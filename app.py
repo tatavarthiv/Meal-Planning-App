@@ -40,6 +40,9 @@ class Recipe(db.Model):
     name = db.Column(db.String(100), nullable=False)
     ingredients = db.Column(db.Text, nullable=False)
     instructions = db.Column(db.Text, nullable=False)
+    calories = db.Column(db.Integer, nullable=False)
+    protein = db.Column(db.Integer, nullable=False)
+    fats = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     # user_id links a recipe to a user
 
@@ -93,13 +96,16 @@ def get_meals():
 
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @login_required
-def add_recipe():
+def add_recipe(): 
     if request.method == 'POST':
         # Logic to add a new recipe
         name = request.form['name']
         ingredients = request.form['ingredients']
         instructions = request.form['instructions']
-        new_recipe = Recipe(name=name, ingredients=ingredients, instructions=instructions, user_id=current_user.id)
+        calories = request.form['calories']
+        protein = request.form['protein']
+        fats = request.form['fats']
+        new_recipe = Recipe(name=name, ingredients=ingredients, instructions=instructions, calories=calories, protein=protein, fats=fats, user_id=current_user.id)
         db.session.add(new_recipe)
         db.session.commit()
         return redirect(url_for('view_recipes'))

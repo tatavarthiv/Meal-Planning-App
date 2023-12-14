@@ -51,6 +51,9 @@
             <p>{{ recipe.ingredients }}</p>
             <h3>Instructions:</h3>
             <p>{{ recipe.instructions }}</p>
+            <p>Calories: <span>{{ recipe.calories }}</span></p> 
+            <p>Protein: <span>{{ recipe.protein }}</span></p>
+            <p>Fats: <span>{{ recipe.fats }}</span></p>        
             <div class="recipe-actions">
                 <a href="{{ url_for('add_recipe', id=recipe.id) }}">Edit</a> <!-- change to edit recipe -->
                 <a href="{{ url_for('view_recipe', id=recipe.id) }}">Delete</a> <!-- change to delete recipe -->
