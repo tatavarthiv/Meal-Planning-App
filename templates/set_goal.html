@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if existing_goal %}Update Goal{% else %}Set Daily Goals{% endif %}</title>
+    <style>
+        .goal-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .goal-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            max-width: 400px; /* Adjust width as needed */
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .goal-card h2 {
+            color: #333;
+            text-align: center;
+        }
+        .goal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .goal-form input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .goal-form button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .goal-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="goal-container">
+        <div class="goal-card">
+            <h2>{% if existing_goal %}Update Your Daily Goals{% else %}Set Your Daily Goals{% endif %}</h2>
+            {% if existing_goal %}
+                <div class="current-goal">
+                    <h3>Current Goal:</h3>
+                    <p>Calories: <span>{{ existing_goal.target_calories }}</span></p>
+                    <p>Carbohydrates(g): <span>{{ existing_goal.target_carbohydrates }}</span></p>
+                    <p>Protein(g): <span>{{ existing_goal.target_protein }}</span></p>
+                    <p>Fats(g): <span>{{ existing_goal.target_fats }}</span></p>
+                </div>
+            {% endif %}
+            <form class="goal-form" action="{{ url_for('set_goal') }}" method="post">
+                <input type="number" name="target_calories" placeholder="Target Calories">
+                <input type="number" name="target_carbohydrates" placeholder="Target Carbohydrates">
+                <input type="number" name="target_protein" placeholder="Target Protein">
+                <input type="number" name="target_fats" placeholder="Target Fats">
+                <button type="submit">{% if existing_goal %}Update Goal{% else %}Set Goal{% endif %}</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

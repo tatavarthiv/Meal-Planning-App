@@ -35,12 +35,22 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
 
+class Goal(db.Model): 
+    id = db.Column(db.Integer, primary_key=True)
+    target_calories = db.Column(db.Integer, nullable=False)
+    target_carbohydrates = db.Column(db.Integer, nullable=False)
+    target_protein = db.Column(db.Integer, nullable=False)
+    target_fats = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # user_id links a goal to a user
+
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     ingredients = db.Column(db.Text, nullable=False)
     instructions = db.Column(db.Text, nullable=False)
     calories = db.Column(db.Integer, nullable=False)
+    carbohydrates = db.Column(db.Integer, nullable=False)
     protein = db.Column(db.Integer, nullable=False)
     fats = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -77,22 +87,44 @@ def view_recipes():
 @login_required
 def get_meals():
     meals = Meal.query.filter_by(user_id=current_user.id).all()
+    goals = Goal.query.filter_by(user_id=current_user.id).first()
 
     meal_data = []
-    colors = {'breakfast': 'yellow', 'lunch': 'lightgreen', 'dinner': 'lightblue'}
+    daily_totals = {}
     times = {'breakfast': time(7, 0), 'lunch': time(12, 0), 'dinner': time(18, 0)}
 
     for meal in meals:
         meal_time = times.get(meal.meal_type.lower(), time(0, 0))  # Default to midnight if not matched
         meal_datetime = datetime.combine(meal.date, meal_time)
 
+        total_macros = calculate_total_macros(meal.recipe_id)
+        if meal.date not in daily_totals:
+            daily_totals[meal.date] = total_macros
+        else:
+            daily_totals[meal.date]['calories'] += total_macros['calories']
+            daily_totals[meal.date]['carbohydrates'] += total_macros['carbohydrates']
+            daily_totals[meal.date]['protein'] += total_macros['protein']
+        
+        if daily_totals[meal.date]['calories'] >= goals.target_calories and daily_totals[meal.date]['carbohydrates'] >= goals.target_carbohydrates and daily_totals[meal.date]['protein'] >= goals.target_protein:
+            backgroundColor = 'green'
+        else:
+            backgroundColor = 'gray'
+
         meal_data.append({
             'title': meal.meal_type,
             'start': meal_datetime.isoformat(),
-            'color': colors.get(meal.meal_type.lower(), 'gray'),  # Default color if not matched
+            'color': backgroundColor,
             'url': url_for('view_recipe', id=meal.recipe_id)
         })
     return jsonify(meal_data)
+
+def calculate_total_macros(recipe_id):
+    recipe = Recipe.query.get(recipe_id)
+    return {
+        'calories': recipe.calories,
+        'carbohydrates': recipe.carbohydrates,
+        'protein': recipe.protein
+    }
 
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @login_required
@@ -103,9 +135,10 @@ def add_recipe():
         ingredients = request.form['ingredients']
         instructions = request.form['instructions']
         calories = request.form['calories']
+        carbohydrates = request.form['carbohydrates']
         protein = request.form['protein']
         fats = request.form['fats']
-        new_recipe = Recipe(name=name, ingredients=ingredients, instructions=instructions, calories=calories, protein=protein, fats=fats, user_id=current_user.id)
+        new_recipe = Recipe(name=name, ingredients=ingredients, instructions=instructions, calories=calories, carbohydrates=carbohydrates, protein=protein, fats=fats, user_id=current_user.id)
         db.session.add(new_recipe)
         db.session.commit()
         return redirect(url_for('view_recipes'))
@@ -129,6 +162,39 @@ def plan_meal():
         return redirect(url_for('home'))
     user_recipes = Recipe.query.filter_by(user_id=current_user.id).all()
     return render_template('plan_meal.html', recipes=user_recipes)
+
+@app.route('/set_goal', methods=['GET', 'POST'])
+@login_required
+def set_goal():
+    existing_goal = Goal.query.filter_by(user_id=current_user.id).first()
+
+    if request.method == 'POST':
+        target_calories = request.form['target_calories']
+        target_carbohydrates = request.form['target_carbohydrates']
+        target_protein = request.form['target_protein']
+        target_fats = request.form['target_fats']
+
+        if existing_goal:
+            # Update existing goal
+            existing_goal.target_calories = target_calories
+            existing_goal.target_carbohydrates = target_carbohydrates
+            existing_goal.target_protein = target_protein
+            existing_goal.target_fats = target_fats
+        else:
+            # Create new goal
+            new_goal = Goal(
+                target_calories=target_calories,
+                target_carbohydrates=target_carbohydrates,
+                target_protein=target_protein,
+                target_fats=target_fats,
+                user_id=current_user.id
+            )
+            db.session.add(new_goal)
+
+        db.session.commit()
+        return redirect(url_for('set_goal'))
+
+    return render_template('set_goal.html', existing_goal=existing_goal)
 
 #user auth routes
 
