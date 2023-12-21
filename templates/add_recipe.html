@@ -72,6 +72,32 @@
     </div>
 </body>
 </html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var api_key = "{{ api_key }}";
+        var recipeNameInput = document.getElementById('name');
+        recipeNameInput.addEventListener('input', function() {
+            var query = this.value;
+            if(query.length > 2) { // To avoid too many API calls for very short strings
+                fetch(`https://api.calorieninjas.com/v1/nutrition?query=${encodeURIComponent(query)}`, {
+                    headers: {
+                        'X-Api-Key': api_key
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.items && data.items.length > 0) {
+                        var nutrients = data.items[0];
+                        document.getElementById('calories').value = nutrients.calories || 0;
+                        document.getElementById('carbohydrates').value = nutrients.carbohydrates_total_g || 0;
+                        document.getElementById('protein').value = nutrients.protein_g || 0;
+                        document.getElementById('fats').value = nutrients.fats_total_g || 0;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        });
+    });
+</script>
 {% endblock %}
-
-

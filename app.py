@@ -7,6 +7,10 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 # from flask_wtf import CSRFProtect
 # from werkzeug.security import generate_password_hash, check_password_hash
 
+#environment imports
+from dotenv import load_dotenv
+load_dotenv()
+
 #other imports
 import os
 from datetime import datetime, time
@@ -129,6 +133,7 @@ def calculate_total_macros(recipe_id):
 @app.route('/add_recipe', methods=['GET', 'POST'])
 @login_required
 def add_recipe(): 
+    api_key = os.environ.get('CALORIENINJAS_API_KEY')
     if request.method == 'POST':
         # Logic to add a new recipe
         name = request.form['name']
@@ -142,7 +147,7 @@ def add_recipe():
         db.session.add(new_recipe)
         db.session.commit()
         return redirect(url_for('view_recipes'))
-    return render_template('add_recipe.html')
+    return render_template('add_recipe.html', api_key=api_key)
 
 @app.route('/plan_meal', methods=['GET', 'POST'])
 @login_required
