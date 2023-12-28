@@ -25,7 +25,6 @@
             margin-top: 10px;
             color: #666;
         }
-        input[type="text"],
         textarea {
             width: 100%;
             padding: 10px;
@@ -55,17 +54,17 @@
             <label for="name">Recipe Name:</label>
             <input type="text" id="name" name="name" required>
             <label for="ingredients">Ingredients:</label>
-            <textarea id="ingredients" name="ingredients" required></textarea>
+            <textarea id="ingredients" name="ingredients"></textarea>
             <label for="instructions">Instructions:</label>
-            <textarea id="instructions" name="instructions" required></textarea>
+            <textarea id="instructions" name="instructions"></textarea>
             <label for="calories">Calories:</label>
-            <input type="number" id="calories" name="calories" required>
+            <input type="text" id="calories" name="calories" pattern="\d+(\.\d{1,2})?" required>
             <label for="carbohydrates">Carbohydrates(g):</label>
-            <input type="number" id="carbohydrates" name="carbohydrates" required>
+            <input type="text" id="carbohydrates" name="carbohydrates" pattern="\d+(\.\d{1,2})?" required>
             <label for="protein">Protein(g):</label>
-            <input type="number" id="protein" name="protein" required>
+            <input type="text" id="protein" name="protein" pattern="\d+(\.\d{1,2})?" required>
             <label for="fats">Fats(g):</label>
-            <input type="number" id="fats" name="fats" required>
+            <input type="text" id="fats" name="fats" pattern="\d+(\.\d{1,2})?" required>
             <br> <br>
             <input type="submit" value="Add Recipe">
         </form>

@@ -51,12 +51,12 @@ class Goal(db.Model):
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    ingredients = db.Column(db.Text, nullable=False)
-    instructions = db.Column(db.Text, nullable=False)
-    calories = db.Column(db.Integer, nullable=False)
-    carbohydrates = db.Column(db.Integer, nullable=False)
-    protein = db.Column(db.Integer, nullable=False)
-    fats = db.Column(db.Integer, nullable=False)
+    ingredients = db.Column(db.Text, nullable=True)
+    instructions = db.Column(db.Text, nullable=True)
+    calories = db.Column(db.Float, nullable=False)
+    carbohydrates = db.Column(db.Float, nullable=False)
+    protein = db.Column(db.Float, nullable=False)
+    fats = db.Column(db.Float, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     # user_id links a recipe to a user
 
